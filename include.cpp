@@ -143,19 +143,14 @@ string NetworkCommuncation::UTF8encode(const wchar_t *mytext)
 }
 
 
-size_t writefunc(void *ptr, size_t size, size_t nmemb, std::string *s)
+size_t NetworkCommuncation::writefunc(void *ptr, size_t size, size_t nmemb, std::string *s)
 {
     s->append(static_cast<char *>(ptr), size * nmemb);
     return size * nmemb;
 }
 
-string class NetworkCommuncation::send(const string &text)
+string NetworkCommuncation::send(const string &url)
 {
-
-    wstring name(text.begin(), text.end());
-    const wchar_t *szName = name.c_str();
-
-    url += UTF8encode(szName);
 
     CURL *curl;
     CURLcode res;
@@ -181,21 +176,22 @@ string class NetworkCommuncation::send(const string &text)
     return s;
 }
 
-Translator::Translator()
-{
-    
-}
 string Translator::translate(const string &text)
 {
+    NetworkCommuncation net;
     string url = "https://translate.googleapis.com/translate_a/single?client=gtx&sl=";
-    url += "auto";
+    url += langIn;
     url += "&tl=";
-    url += "pt-br";
+    url += langOut;
     url += "&dt=t&q=";
-    NetworkCommuncation
+    wstring name(text.begin(), text.end());
+    const wchar_t *szName = name.c_str();
+    url += net.UTF8encode(szName);
+    return net.send(url);
+
 }
 
-string Translate::resumeResult(string &text)
+string Translator::resumeResult(const string &text)
 {
     string str;
     for (int a = 4; a < text.size(); a++)
@@ -205,4 +201,22 @@ string Translate::resumeResult(string &text)
         str += text[a];
     }
     return str;
+}
+
+void Translator::setLangIn(const string langIn)
+{
+    this->langIn = langIn;
+}
+void Translator::setLangOut(const string langOut)
+{
+    this->langOut = langOut;
+}
+
+string Translator::getLangIn()
+{
+    return langIn;
+}
+string Translator::getLangOut()
+{
+    return langOut;
 }
