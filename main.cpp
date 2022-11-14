@@ -19,6 +19,21 @@ const short int mapString(const string &str)
     return 0;
 }
 
+void help(){
+    cout << "Lista de ajuda!";
+    cout << "\n\\set li\n";
+    cout << "\tConfigura o idioma de entrada!";
+    cout << "\n\\set lo\n";
+    cout << "\tConfigura o idioma de entrada!";
+    cout << "\n\\get lang\n";
+    cout << "\tExibe os idiomas usados!";
+    cout << "\n\\clear\n";
+    cout << "\tLimpa a tela";
+    cout << "\n\\exit\n";
+    cout << "\tSai do programa.\n";
+}
+
+
 string command(string str)
 {
     switch (mapString(str))
@@ -30,7 +45,7 @@ string command(string str)
         exit(0);
         break;
     case 2:
-        cout << ">> HELP\n";
+        help();
         break;
     case 3:
         trans.setLangIn(str.substr(7));
@@ -40,11 +55,15 @@ string command(string str)
         break;
     case 5:
         cout << ">>In: " << trans.getLangIn() << " Out: " << trans.getLangOut() << endl;
+    case 6:
+        cout << "\x1B[2J\x1B[H";
     default:
+        cout << "Comando não encontrado!";
         break;
     }
     return "  ";
 }
+
 
 int main()
 {
